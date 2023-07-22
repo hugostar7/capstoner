@@ -15,24 +15,11 @@ data frame
 }
 \description{
 Clean data frame with specific columns as
-in earthquakes data frame from NOAA. Unite columns:
-Year, Mo and Dy to create a date class column DATE.
-It coerces columns: Longitude and Latitude to numeric
-class columns: LONGITUDE, LATITUDE. NAs are removed under
-columns: Year, Mo, Dy used to form the new DATE column. Only
-Year > 0 are considered to ensure compatibility with
-lubridate package.
-}
-\examples{
-# Clean earthquakes data
-eq_clean_data(earthquakes)
-
-# See what happened to this one row data
-df = data.frame(
-Year = 2000, Mo = 1, Dy = 1,
-Longitude = 0, Latitude = 0,
-Mag = 0, Deaths = 0)
-
-eq_clean_data(df)
-
+in earthquakes data frame from NOAA including: \code{Year} ,
+\code{Mo}, \code{Dy}, \code{Longitude}, \code{Latitude}. Unite columns: Year,
+Mo and Dy to create a date class column DATE. It coerces
+columns: Longitude and Latitude to numeric class columns:
+LONGITUDE, LATITUDE. NAs are removed under columns: Year,
+Mo, Dy used to form the new DATE column. Only Year > 0
+are considered to ensure compatibility with lubridate package.
 }

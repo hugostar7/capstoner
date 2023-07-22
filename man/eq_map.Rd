@@ -26,8 +26,3 @@ and LATITUDE on that row. The radius of the circle is
 proportional to the Mag on that row. The annotation is
 displayed by clicking on the circle.
 }
-\examples{
-lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
-eq_map(lcd, annot_col = "DATE")
-
-}

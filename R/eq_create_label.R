@@ -11,9 +11,6 @@
 #' @importFrom htmltools HTML
 #'
 #' @examples
-#' # Annotation text to use in popup
-#' lcd = eq_location_clean(earthquakes, 2000, 2020, "JAPAN")
-#' eq_create_label(lcd)
 #'
 #' @export
 eq_create_label <- function(data) {

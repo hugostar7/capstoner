@@ -27,21 +27,6 @@
 #' @importFrom magrittr %>%
 #'
 #' @examples
-#' # Clean earthquakes data frame
-#' eq_location_clean(earthquakes)
-#'
-#' # Clean earthquakes data and filter data for specific countries
-#' eq_location_clean(earthquakes, countries = "ALASKA")
-#' eq_location_clean(earthquakes, countries = c("PERU", "FRANCE", "ITALY"))
-#'
-#' # Clean earthquakes data and filter data for a minimum or maximum year
-#' eq_location_clean(earthquakes, year_min = 1970)
-#' eq_location_clean(earthquakes, year_max = 1975)
-#' eq_location_clean(earthquakes, year_min = 1970, year_max = 2000)
-#'
-#' # Clean earthquakes data and filter data for specific countries
-#' # and years range
-#' eq_location_clean(earthquakes, 1970, 2000, c("PERU", "FRANCE", "ITALY"))
 #'
 #' @export
 eq_location_clean <- function(x,

@@ -17,9 +17,3 @@ Create string to be used for popup annotation on a map.
 It requires columns: LOCATION_NAME, Total Deaths
 and Mag from your data frame
 }
-\examples{
-# Annotation text to use in popup
-lcd = eq_location_clean(earthquakes, 2000, 2020, "JAPAN")
-eq_create_label(lcd)
-
-}

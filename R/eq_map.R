@@ -21,8 +21,6 @@
 #' @importFrom magrittr %>%
 #'
 #' @examples
-#' lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
-#' eq_map(lcd, annot_col = "DATE")
 #'
 #' @export
 eq_map <- function(data, annot_col) {
