@@ -1,10 +1,18 @@
 Package: capstoner
-Title: What the Package Does (One Line, Title Case)
+Title: Create Maps And Time Series Plots Of Earthquakes Data
 Version: 0.0.0.9000
 Authors@R: 
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: This package offers tools to create time series plots
+  and maps of earthquakes data with specific columns. The functions
+  eq_clean_data() and eq_location_clean() can be used to clean 
+  the data and create the columns necessary(DATE, COUNTRY,
+  LOCATION_NAME) for our data analysis. The function 
+  geom_timeline() creates time series plots which can be 
+  annotated with geom_timeline_label(). The function 
+  eq_create_label() helps create popups on interactive maps
+  created using eq_maps().
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
