@@ -30,3 +30,5 @@ Imports:
     lubridate,
     magrittr,
     stringr
+URL: https://github.com/hugostar7/capstoner
+BugReports: https://github.com/hugostar7/capstoner/issues
