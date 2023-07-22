@@ -27,4 +27,6 @@ URL: https://github.com/hugostar7/capstoner
 BugReports: https://github.com/hugostar7/capstoner/issues
 Imports: 
     dplyr,
-    magrittr
+    lubridate,
+    magrittr,
+    stringr
