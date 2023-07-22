@@ -20,4 +20,5 @@
 #' head(earthquakes)
 #'
 #' earthquakes
+#'
 "earthquakes"

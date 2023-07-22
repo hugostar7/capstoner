@@ -32,5 +32,6 @@ data("earthquakes")
 head(earthquakes)
 
 earthquakes
+
 }
 \keyword{datasets}
