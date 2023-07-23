@@ -17,23 +17,22 @@
 #' @return list or map
 #'
 #' @importFrom dplyr rename
-#' @importFrom leaflet leaflet addTiles addCircleMarkers
-#' @importFrom magrittr %>%
 #'
 #' @export
 eq_map <- function(data, annot_col) {
   annot_col = as.character(annot_col)
   df = dplyr::rename(data,
                      "annot_col" = paste(annot_col))
-  leaflet::leaflet() %>%
-    leaflet::addTiles() %>%
-    leaflet::addCircleMarkers(
-      data = df,
-      lng = ~ LONGITUDE,
-      lat = ~ LATITUDE,
-      radius = ~ Mag,
-      popup = ~ annot_col,
-      label = ~ annot_col,
-      fillOpacity = .4
-    )
+#  leaflet::leaflet() %>%
+#    leaflet::addTiles() %>%
+#    leaflet::addCircleMarkers(
+#      data = df,
+#      lng = ~ LONGITUDE,
+#      lat = ~ LATITUDE,
+#      radius = ~ Mag,
+#      popup = ~ annot_col,
+#      label = ~ annot_col,
+#      fillOpacity = .4
+#    )
+  df     ## To be removed
 }

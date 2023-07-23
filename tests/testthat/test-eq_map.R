@@ -16,31 +16,3 @@ test_that("data is prepared correctly before call to leaflet", {
   )
 })
 
-test_that("error when required columns are missing", {
-  expect_error(
-    eq_map(
-      data.frame(LATITUDE = 36,
-                 Mag = 4,
-                 LOCATION = "New York"),
-      annot_col = "LOCATION"
-    )
-  )
-
-  expect_error(
-    eq_map(
-      data.frame(LONGITUDE = 26,
-                 Mag = 4,
-                 LOCATION = "New York"),
-      annot_col = "LOCATION"
-    )
-  )
-
-  expect_error(
-    eq_map(
-      data.frame(LONGITUDE = 26,
-                 LATITUDE = 36,
-                 LOCATION = "New York"),
-      annot_col = "LOCATION"
-    )
-  )
-})

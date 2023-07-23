@@ -58,11 +58,11 @@ You can also create an interactive map for the earthquakes data:
 ``` r
 #earthquakes %>%
   #eq_location_clean() %>% 
-  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= #2000) %>% 
   #eq_map(annot_col = "DATE")
 
 # You can also use eq_location_clean to filter the data
-#eq_location_clean(earthquakes, year_min = 2000, countries = "MEXICO") %>%
+#eq_location_clean(earthquakes, year_min = 2000, countries = #"MEXICO") %>%
   #eq_map(annot_col = "DATE")
 ```
 
