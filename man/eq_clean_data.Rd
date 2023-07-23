@@ -27,7 +27,7 @@ lubridate package.
 # Clean earthquakes data
 eq_clean_data(earthquakes)
 
-# Clean ny df
+# Clean my df
 df = data.frame(
 Year = 2001:2005, Mo = 1:5, Dy = 11:15,
 Longitude = 21:25, Latitude = 31:35
