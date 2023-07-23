@@ -34,6 +34,7 @@ year_min, year_max, countries can be used to filter the cleaned
 for some range of years and some countries.
 }
 \examples{
+library(magrittr)
 # Clean earthquakes data frame
 eq_location_clean(earthquakes)
 

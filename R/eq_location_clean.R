@@ -27,6 +27,7 @@
 #' @importFrom magrittr %>%
 #'
 #' @examples
+#' library(magrittr)
 #' # Clean earthquakes data frame
 #' eq_location_clean(earthquakes)
 #'
