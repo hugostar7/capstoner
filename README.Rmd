@@ -30,7 +30,7 @@ clean  the data and create the columns: `DATE`, `COUNTRY`, `LOCATION_NAME`
 `LONGITUDE`, `LATITUDE` in a format required for our data analysis. The
 function `geom_timeline()` creates time series plots which can be 
 annotated with `geom_timeline_label()`. The function `eq_create_label()`
-helps in customizing popups on interactive maps  created using `eq_maps()`.
+helps in customizing popups on interactive maps  created using `eq_map()`.
 
 ## Installation
 
@@ -53,12 +53,12 @@ library(magrittr)
 data("earthquakes")
 
 # Clean data and create DATE column
-#cd = eq_clean_data(earthquakes)
-#head(cd)[ , 33:37]
+cd = eq_clean_data(earthquakes)
+head(cd)[ , 33:36]
 
 # Clean data and create proper COUNTRY and LOCATION_NAME columns
-#lcd = eq_location_clean(earthquakes)
-#head(lcd)[ , 35:38]
+lcd = eq_location_clean(earthquakes)
+head(lcd)[ , 33:37]
 ```
 
 You can also create an interactive map for the earthquakes data:
@@ -66,11 +66,11 @@ You can also create an interactive map for the earthquakes data:
 ```{r interactiveMap}
 #earthquakes %>%
   #eq_location_clean() %>% 
-  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= #2000) %>% 
+  #dplyr::filter(COUNTRY == "MEXICO" &       #lubridate::year(DATE) >= #2000) %>% 
   #eq_map(annot_col = "DATE")
 
 # You can also use eq_location_clean to filter the data
-#eq_location_clean(earthquakes, year_min = 2000, countries = #"MEXICO") %>%
+#eq_location_clean(earthquakes, year_min = 2000, countries #= MEXICO") %>%
   #eq_map(annot_col = "DATE")
 ```
 
@@ -80,7 +80,7 @@ Let's  customize the popups on the previous map using
 ```{r custm_popup}
 #earthquakes %>%
   #eq_location_clean() %>% 
-  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  #dplyr::filter(COUNTRY == "MEXICO" & #lubridate::year(DATE) >= 2000) %>% 
   #dplyr::mutate(popup_text = eq_create_label(.)) %>% 
   #eq_map(annot_col = "popup_text")
 ```
