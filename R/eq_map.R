@@ -20,9 +20,6 @@
 #' @importFrom leaflet leaflet addTiles addCircleMarkers
 #' @importFrom magrittr %>%
 #'
-#' @import raster
-#' @import terra
-#'
 #' @export
 eq_map <- function(data, annot_col) {
   annot_col = as.character(annot_col)
