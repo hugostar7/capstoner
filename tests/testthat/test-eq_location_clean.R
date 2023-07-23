@@ -14,6 +14,29 @@ test_that("eq_location_clean_works_when_reqired_columns_are_supplied", {
       COUNTRY = "TURKEY", LOCATION_NAME = "Antakya (Antioch)"
     )
   )
+
+  my_df = data.frame(
+    Year = 2001:2005, Mo = 1:5, Dy = 11:15,
+    Longitude = 21:25, Latitude = 31:35,
+    `Location Name` = paste(
+      c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"),
+      c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"), sep = ":"),
+    Mag = 3, Deaths = 0,
+    check.names = FALSE
+  )
+
+  my_loc_clean_df = data.frame(
+    Mag = my_df$Mag, Deaths = my_df$Deaths,
+    DATE = as.Date(
+      paste(my_df$Year, my_df$Mo, my_df$Dy, sep = "-")),
+    LONGITUDE = my_df$Longitude,
+    LATITUDE = my_df$Latitude,
+    COUNTRY = c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"),
+    LOCATION_NAME = c("Aaaa", "Bbbb", "Cccc", "Dddd", "Eeee"),
+    check.names = FALSE
+  )
+
+  expect_equal(eq_location_clean(my_df), my_loc_clean_df)
 })
 
 test_that("error_when_required_column_missing", {

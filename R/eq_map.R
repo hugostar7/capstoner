@@ -21,20 +21,18 @@
 #' @importFrom magrittr %>%
 #'
 #' @examples
-#' library(magrittr)
-#' library(leaflet)
-#'
 #' df = data.frame(
 #' Year = 2001:2005, Mo = 1:5, Dy = 11:15,
 #' Longitude = 21:25, Latitude = 31:35,
-#' `Location Name` = paste(LETTERS[1:5],
-#'  LETTERS[1:5], sep = ":"),
+#' `Location Name` = paste(
+#'  c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"),
+#'  c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"), sep = ":"),
 #'  Mag = 3, Deaths = 0,
 #'  check.names = FALSE
 #' )
 #'
 #' eq_location_clean(df) %>%
-#' eq_map(annot_col = "DATE")
+#' #eq_map(annot_col = "DATE")
 #'
 #' @export
 eq_map <- function(data, annot_col) {
