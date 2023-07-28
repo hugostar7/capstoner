@@ -23,11 +23,6 @@
 #' @importFrom ggplot2 layer
 #'
 #' @examples
-#' library(ggplot2)
-#' library(leaflet)
-#' library(raster)
-#' library(terra)
-#'
 #' data = babygrowth
 #' ggplot2::ggplot(
 #'  data, ggplot2::aes(x = DATE, y = AGE, colour = height,

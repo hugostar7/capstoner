@@ -16,6 +16,5 @@ Imaginary babygrowth data
 \examples{
 babygrowth
 
-
 }
 \keyword{datasets}

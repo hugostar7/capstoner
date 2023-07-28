@@ -45,7 +45,6 @@ a point on horizontal line for each row in the plot
 data supplied.
 }
 \examples{
-library(ggplot2)
 
 # Example 1
 lcd = eq_location_clean(earthquakes, countries = "ALASKA")

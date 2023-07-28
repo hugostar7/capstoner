@@ -49,11 +49,6 @@ It constructs a segment line and add text annotation
 from specified  column in the data
 }
 \examples{
-library(ggplot2)
-library(leaflet)
-library(raster)
-library(terra)
-
 data = babygrowth
 ggplot2::ggplot(
  data, ggplot2::aes(x = DATE, y = AGE, colour = height,

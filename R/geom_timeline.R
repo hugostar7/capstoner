@@ -22,7 +22,6 @@
 #' @importFrom ggplot2 layer
 #'
 #' @examples
-#' library(ggplot2)
 #'
 #' # Example 1
 #' lcd = eq_location_clean(earthquakes, countries = "ALASKA")

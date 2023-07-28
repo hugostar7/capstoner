@@ -1,7 +1,8 @@
 ## code to prepare `my_EQ_clean` dataset goes here
 
 my_EQ_clean = data.frame(
-  Mag = 3, Deaths = 0,
+  Mag = c(3, 4, 4, 2, 3),
+  Deaths = c(1, 0, 2, 0, 1),
   DATE = as.Date(paste(2001:2005, 1:5, 11:15, sep = "-")),
   LONGITUDE = 21:25,
   LATITUDE = 31:35,

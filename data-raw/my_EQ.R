@@ -6,7 +6,8 @@ my_EQ <- data.frame(
   `Location Name` = paste(
     c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"),
     c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"), sep = ":"),
-  Mag = 3, Deaths = 0,
+  Mag = c(3, 4, 4, 2, 3),
+  Deaths = c(1, 0, 2, 0, 1),
   check.names = FALSE
 )
 

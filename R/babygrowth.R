@@ -5,5 +5,4 @@
 #' @examples
 #' babygrowth
 #'
-#'
 "babygrowth"
