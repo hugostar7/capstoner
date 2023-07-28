@@ -2,12 +2,13 @@
 % Please edit documentation in R/eq_location_clean.R
 \name{eq_location_clean}
 \alias{eq_location_clean}
-\title{Modify rows or columns in a data frame}
+\title{Modify rows or columns in earthquakes data frame}
 \usage{
 eq_location_clean(x, year_min = 1, year_max = 2050, countries = NULL)
 }
 \arguments{
-\item{x}{data frame with \verb{Location Name} column to be cleaned.}
+\item{x}{data frame with columns : Year, Mo, Dy, Longitude,
+Latitude, Location Name ...}
 
 \item{year_min}{numeric to set minimum for years in DATE column
 Optional argument with default value 1.}
@@ -20,21 +21,33 @@ used to filter the output. Optional argument
 with default value NULL.}
 }
 \value{
-data frame with cleaned COUNTRY and LOCATION_NAME columns
+data frame with columns:
+DATE, COUNTRY, LONGITUDE, LATITUDE, LOCATION_NAME ...
 }
 \description{
-Create COUNTRY and Location_NAME column in a
-data frame with a Location Name column as in NOAA's earthquakes
-data frame. Clean Location Name column by splitting it
-into COUNTRY and LOCATION_NAME columns where COUNTRY
-contains countries names in upper case and LOCATION_NAME
-contains locations names in title case. It also trims out
-white space from the new names. The optional arguments:
-year_min, year_max, countries can be used to filter the cleaned
-for some range of years and some countries.
+\code{eq_clean_data()} clean data frame with specific
+columns as in earthquakes data from NOAA by uniting columns:
+Year, Mo and Dy to create a date class column DATE. It coerces
+columns: Longitude and Latitude to numeric class columns:
+LONGITUDE, LATITUDE. Needless to say, your data should contain
+columns named: Year, Mo, Dy, Longitude and Latitude. The same
+tasks can be performed by \code{eq_location_clean()}. In addition,
+it splits Location Name column into LOCATION_NAME(title case)
+and COUNTRY(upper case). It can be used to filter the data for
+some range of years and for some countries supplied as vector.
 }
 \examples{
-library(magrittr)
+# Clean earthquakes data
+eq_clean_data(earthquakes)
+
+# Clean my df
+df = data.frame(
+  Year = 2001:2005, Mo = 1:5, Dy = 11:15,
+  Longitude = 21:25, Latitude = 31:35
+)
+
+eq_clean_data(df)
+
 # Clean earthquakes data frame
 eq_location_clean(earthquakes)
 
@@ -50,5 +63,6 @@ eq_location_clean(earthquakes, year_min = 1970, year_max = 2000)
 # Clean earthquakes data and filter data for specific countries
 # and years range
 eq_location_clean(earthquakes, 1970, 2000, c("PERU", "FRANCE", "ITALY"))
+
 
 }

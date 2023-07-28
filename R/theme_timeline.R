@@ -11,13 +11,17 @@
 #' @return `theme element`.
 #'
 #' @examples
-#' library(ggplot2)
-#' lcd = eq_location_clean(
-#' earthquakes, countries = c("PERU", "CHILE")
-#' )
-#' ggplot2::ggplot(lcd, ggplot2::aes(x = DATE, y = COUNTRY)) +
-#' stat_timeline() +
-#' theme_timeline()
+#' # Example 1
+#' data = babygrowth
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+#'                                   size = weight)) +
+#'  geom_timeline() + theme_timeline()
+#'
+#' # Example 2
+#' data = my_EQ_clean
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths,
+#'                                    size = Mag)) +
+#'  geom_timeline() + theme_timeline()
 #'
 #' @export
 theme_timeline <- function(...) {

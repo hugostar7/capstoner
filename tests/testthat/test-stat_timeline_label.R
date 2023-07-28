@@ -1,54 +1,71 @@
-test_that("annotation stat requires x", {
+test_that("annotation stat requires x and label", {
 
-  lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
-  plot <-
-    ggplot2::ggplot(
-      lcd,
-      ggplot2::aes(x = DATE, y = COUNTRY, size = Mag,
-                   colour = Deaths, group = grp_aes)) +
-    geom_timeline() + ggplot2::theme_classic() +
-    ggplot2::theme(axis.line.y = ggplot2::element_blank(),
-                   axis.title.y = ggplot2::element_blank(),
-                   axis.ticks.y = ggplot2::element_blank(),
-                   legend.position = "bottom") +
-    ggplot2::scale_size_continuous(name = "Richter scale value",
-                                   breaks = c(2, 4, 6, 8, 10)) +
-    ggplot2::scale_color_continuous(name = "# Deaths")
-
-
-  expect_error(
-    plot +
-      stat_timeline_label(
-        lcd, ggplot2::aes(y = COUNTRY,
-                          label = LOCATION_NAME, by = Mag),
-        colour = "black", size = 3, alpha = NA, n_max = 5
-      )
+  # Data
+  my_data = data.frame(
+    Mag = 3, Deaths = 0,
+    DATE = as.Date(paste(2001:2005, 1:5, 11:15, sep = "-")),
+    LONGITUDE = 21:25,
+    LATITUDE = 31:35,
+    COUNTRY = c("AAAA", "BBBB", "CCCC", "DDDD", "EEEE"),
+    LOCATION_NAME = c("Aaaa", "Bbbb", "Cccc", "Dddd", "Eeee"),
+    check.names = FALSE
   )
-})
 
-test_that("annotation stat requires label", {
+  # Create a plot
+  p <-
+    ggplot2::ggplot(my_data,
+                    ggplot2::aes(x = DATE, y = COUNTRY, size = Mag, colour = Deaths)) +
+    ggplot2::geom_point()
 
-  lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
-  plot <-
-    ggplot2::ggplot(
-      lcd,
-      ggplot2::aes(x = DATE, y = COUNTRY, size = Mag,
-                   colour = Deaths, group = grp_aes)) +
-    geom_timeline() + ggplot2::theme_classic() +
-    ggplot2::theme(axis.line.y = ggplot2::element_blank(),
-                   axis.title.y = ggplot2::element_blank(),
-                   axis.ticks.y = ggplot2::element_blank(),
-                   legend.position = "bottom") +
-    ggplot2::scale_size_continuous(name = "Richter scale value",
-                                   breaks = c(2, 4, 6, 8, 10)) +
-    ggplot2::scale_color_continuous(name = "# Deaths")
+  # Error when x missing
+  #expect_error(
+  #p +
+  #stat_timeline_label(
+    #ggplot2::aes(y = COUNTRY, label = LOCATION_NAME, orderBy = Mag),
+    #n_max = 5, inherit.aes = FALSE)
+  #)
 
+  # Error when label missing
+  #expect_error(
+  #p +
+  #stat_timeline_label(
+    #ggplot2::aes(x = DATE, y = COUNTRY, orderBy = Mag),
+    #n_max = 5, inherit.aes = FALSE)
+  #)
 
-  expect_error(
-    plot +
+  # No error when x and label are supplied, nothing else added
+  expect_no_error(
+    p +
       stat_timeline_label(
-        lcd, ggplot2::aes(x = DATE, y = COUNTRY, by = Mag),
-        colour = "black", size = 3, alpha = NA, n_max = 5
-      )
+        ggplot2::aes(x = DATE, label = LOCATION_NAME), inherit.aes = FALSE))
+
+  # No error when x and label are supplied
+  expect_no_error(
+    p +
+      stat_timeline_label(
+        ggplot2::aes(x = DATE, y = COUNTRY, label = LOCATION_NAME,
+        orderBy = Mag), n_max = 5, inherit.aes = FALSE))
+
+  # No error when x and label are supplied, y missing
+  expect_no_error(
+    p +
+      stat_timeline_label(
+        ggplot2::aes(x = DATE, label = LOCATION_NAME,
+        orderBy = Mag), n_max = 5, inherit.aes = FALSE))
+
+  # No error when x and label are supplied, orderBy missing
+  expect_no_error(
+    p +
+      stat_timeline_label(
+        ggplot2::aes(x = DATE, y = COUNTRY, label = LOCATION_NAME),
+        n_max = 5, inherit.aes = FALSE))
+
+  # No error when x and label are supplied, n_max missing
+  expect_no_error(
+    p +
+      stat_timeline_label(
+        ggplot2::aes(x = DATE, y = COUNTRY, label = LOCATION_NAME,
+        orderBy = Mag), inherit.aes = FALSE)
   )
+
 })

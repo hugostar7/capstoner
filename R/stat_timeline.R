@@ -20,12 +20,50 @@
 #' @importFrom ggplot2 layer
 #'
 #' @examples
-#' library(ggplot2)
-#' lcd = eq_location_clean(
-#' earthquakes, countries = c("PERU", "CHILE")
-#' )
-#' ggplot2::ggplot(lcd, ggplot2::aes(x = DATE, y = COUNTRY)) +
+#' # Example 1
+#' lcd = eq_location_clean(earthquakes, countries = "ALASKA")
+#' ggplot2::ggplot(lcd, ggplot2::aes(x = DATE)) +
 #' stat_timeline()
+#'
+#' # Example 2
+#' lcd = eq_location_clean(earthquakes, 2000, 2020, c("CHINA","TURKEY"))
+#' ggplot2::ggplot(
+#'   lcd,
+#'   ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths, size = Mag)) +
+#'   stat_timeline()
+#'
+#' # Example 3
+#' df = data.frame(
+#' DATE = c(1,2,3,1,2),
+#' COUNTRY = c("C","A","C","B","B")
+#' )
+#'
+#' ggplot2::ggplot(df, ggplot2::aes(x = DATE, y = COUNTRY)) +
+#'  stat_timeline(xMin = 2,xMax = 5)
+#'
+#' # Example 4
+#' data = babygrowth
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = 1, colour = height,
+#'                                   size = weight)) +
+#'  stat_timeline(alpha = .5)
+#'
+#' # Example 5
+#' data = babygrowth
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+#'                                   size = weight)) +
+#'  stat_timeline()
+#'
+#' # Example 6
+#' data = my_EQ_clean
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths,
+#'                                    size = Mag)) +
+#'  stat_timeline()
+#'
+#' # Example 7
+#' data = my_EQ_clean
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, colour = Deaths, size = Mag)) +
+#'   stat_timeline()
+#
 #'
 #' @export
 stat_timeline <- function(
@@ -33,11 +71,12 @@ stat_timeline <- function(
     data = NULL,
     geom = "timeline",
     position = "identity",
-    xMin = as.Date("0001-01-01"),
-    xMax = as.Date("2050-12-31"),
     show.legend = NA,
     inherit.aes = TRUE,
-    na.rm = FALSE,...) {
+    na.rm = FALSE,
+    xMin = as.Date("0001-01-01"),
+    xMax = as.Date("2050-12-31"),...) {
+
   ggplot2::layer(stat = StatTimeline,
                  geom = geom,
                  mapping = mapping,
@@ -66,27 +105,19 @@ stat_timeline <- function(
 #' @param alpha transparency chanel for points.
 #' @param colour default aesthetic for color points
 #' @param size default aesthetic  for size of points
-#' @param grp_aes default aesthetic to define grouping
-#'                structure in a data frame.
 #' @importFrom ggplot2 ggproto Stat aes
 StatTimeline <- ggplot2::ggproto(
+
   "StatTimeline", ggplot2::Stat,
+
   required_aes = c("x"),
-  default_aes = ggplot2::aes(y = 1),
+
   compute_group = function(data,
                            scales,
                            params,
                            xMin = as.Date("0001-01-01"),
-                           xMax = as.Date("2050-12-31")) {
-    ## Compute points on the timeline
-    out = data[data$x >= xMin & data$x <= xMax, ]
-    x = out$x
-    y = ifelse(!is.null(out$y), out$y, 1)
+                           xMax = as.Date("2050-12-31"), ...) {
 
-    #y = factor(y)
-    #levels(y) <- 1:length(levels(y))
-    #y <- as.numeric(y)
-
-    ## Return data frame
-    data.frame(x = x, y = y, xMin = xMin, xMax = xMax)
+    ## Select EQs in specified time range
+    data[data$x >= xMin & data$x <= xMax, ]
   })

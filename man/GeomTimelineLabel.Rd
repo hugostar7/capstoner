@@ -31,15 +31,13 @@ caused by earthquakes}
 
 \item{vjust}{description}
 
-\item{linewidth, }{default aesthetic for horizontal lines}
+\item{linewidth, }{default aesthetic for vertical segments.}
 
-\item{linetype}{description}
+\item{linetype}{description.}
 
-\item{lineheight}{default aesthetic for color of horizontal lines}
+\item{linecolour}{default aesthetic for color of horizontal lines.}
 
-\item{group}{description}
-
-\item{family}{description}
+\item{lineaplha}{colours alpha channel for vertical segments.}
 }
 \description{
 ggproto object of class Geom. Builds annotation grobs

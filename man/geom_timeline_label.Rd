@@ -11,7 +11,7 @@ geom_timeline_label(
   position = "identity",
   inherit.aes = FALSE,
   show.legend = FALSE,
-  na.rm = TRUE,
+  na.rm = FALSE,
   ...
 )
 }
@@ -43,18 +43,14 @@ This function bulds annotation layer by adding segment
 and text label for each row of the plot data
 }
 \examples{
-library(ggplot2)
-lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
+data = babygrowth
 
 ggplot2::ggplot(
-    lcd,
-    ggplot2::aes(x = DATE, y = COUNTRY, size = Mag,
-                 colour = Deaths, group = 1:nrow(lcd))) +
-    geom_timeline() +
-    geom_timeline_label(
-    lcd, ggplot2::aes(x = DATE, y = COUNTRY,
-                 label = LOCATION_NAME, by = Mag),
-    colour = "black", size = 3, alpha = NA
-)
+ data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+                   size = weight)
+) +
+ggplot2::geom_point() +
+geom_timeline_label(
+data, ggplot2::aes(x = DATE, y = AGE, label = DATE))
 
 }

@@ -20,19 +20,15 @@
 #' @importFrom ggplot2  layer
 #'
 #' @examples
-#' library(ggplot2)
-#' lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
+#' data = babygrowth
 #'
 #' ggplot2::ggplot(
-#'     lcd,
-#'     ggplot2::aes(x = DATE, y = COUNTRY, size = Mag,
-#'                  colour = Deaths, group = 1:nrow(lcd))) +
-#'     geom_timeline() +
-#'     geom_timeline_label(
-#'     lcd, ggplot2::aes(x = DATE, y = COUNTRY,
-#'                  label = LOCATION_NAME, by = Mag),
-#'     colour = "black", size = 3, alpha = NA
-#' )
+#'  data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+#'                    size = weight)
+#' ) +
+#' ggplot2::geom_point() +
+#' geom_timeline_label(
+#' data, ggplot2::aes(x = DATE, y = AGE, label = DATE))
 #'
 #' @export
 geom_timeline_label <- function(data = NULL,
@@ -41,7 +37,7 @@ geom_timeline_label <- function(data = NULL,
                                 position = "identity",
                                 inherit.aes = FALSE,
                                 show.legend = FALSE,
-                                na.rm = TRUE, ...) {
+                                na.rm = FALSE, ...) {
   ggplot2::layer(
     data = data,
     mapping = mapping,
@@ -79,35 +75,64 @@ geom_timeline_label <- function(data = NULL,
 #' @param size default aesthetic to define size of points
 #' @param hjust default aesthetic for shape of points used.
 #' @param vjust description
-#' @param linewidth, default aesthetic for horizontal lines
-#' @param linetype description
-#' @param lineheight default aesthetic for color of horizontal lines
-#' @param group description
-#' @param family description
+#' @param linewidth, default aesthetic for vertical segments.
+#' @param linetype description.
+#' @param linecolour default aesthetic for color of horizontal lines.
+#' @param lineaplha colours alpha channel for vertical segments.
 GeomTimelineLabel <- ggplot2::ggproto(
   "GeomTimelineLabel", ggplot2::Geom,
 
-  required_aes = c("x", "y", "xend","yend", "label", "by"),
+  # Required aesthetics
+  required_aes = c("x", "label"),
+
+  # Default aesthetics
   default_aes = ggplot2::aes(
-    colour = "black", linewidth = 1, linetype = 1,
-    lineheight = 1, fontface = 1, size = 3, alpha = 1,
-    hjust = 0, vjust = 0.5, just = .5, angle = 45
+    y = .1, orderBy = 1,
+    colour = "black", alpha = NA,
+    linewidth = 1, linetype = 1,
+    angle = 45, fontsize = 7,
+    hjust = 0, vjust = 0, just = 0
   ),
 
-  draw_panel = function(data, panel_params, coord, ...) {
-    # Transform the data
-    #coords <- coord$transform(data, panel_params, ...)
-    SEGMENTS = transform(data)
-    LABELS = transform(data, x = x, y = yend, label = label)
+  # Draw panel function
+  draw_panel = function(data,
+                        panel_params,
+                        coord,
+                        n_max = 5,
+                        sgm_len = .1, ...) {
+
+    # Transform data
+    coords <- coord$transform(data, panel_params, ...)
 
     # Construct the grobs
-    grid::gList(
-      ggplot2::GeomSegment$draw_panel(
-        SEGMENTS, panel_params, coord, ...
-      ),
-      ggplot2::GeomText$draw_panel(
-        LABELS, panel_params, coord, ...
-      )
+    ## The segments
+    SEGMENTS <- grid::segmentsGrob(
+      x0 = coords$x,
+      y0 = coords$y,
+      x1 = coords$x,
+      y1 = grid::unit(coords$y + coords$sgm_len, "npc"),
+      default.units = "npc",
+      gp = grid::gpar(col = coords$colour,
+                      lwd = coords$linewidth,
+                      lty = coords$linetype)
+    )
+
+    ## The labels
+    LABELS <- grid::textGrob(
+      label = coords$label,
+      x = coords$x,
+      y = grid::unit(coords$y + coords$sgm_len, "npc"),
+      rot = coords$angle,
+      hjust = coords$hjust,
+      vjust = coords$vjust,
+      just = coords$just,
+      gp = grid::gpar(fontsize = coords$fontsize,
+                      col = coords$colour)
+    )
+
+    # Return all grobs
+    grid::gTree(
+      children = grid::gList(SEGMENTS, LABELS)
     )
   }
 )

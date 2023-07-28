@@ -16,13 +16,24 @@ Mag columns}
 list or map
 }
 \description{
-This function uses functions from \verb{leaflet package}
+This function uses functions from leaflet package
 to create an interactive map with popup annotation.
 The column to be used for annotation should be a
 vector character or a string supplied through the
-\code{annot_col} argument. Each row of the \code{data} supplied
-is represented on the map with a \code{circle}  at LONGITUDE
+annot_col argument. Each row of the data supplied
+is represented on the map with a `circle  at LONGITUDE
 and LATITUDE on that row. The radius of the circle is
 proportional to the Mag on that row. The annotation is
 displayed by clicking on the circle.
+}
+\examples{
+library(raster)
+library(terra)
+lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
+eq_map(lcd, annot_col = "LOCATION_NAME")
+
+data = my_EQ_clean
+eq_map(data, annot_col = "DATE")
+
+
 }

@@ -51,7 +51,7 @@ test_that("error_when_required_column_missing", {
 
 
   expect_error(
-    eq_clean_data(
+    eq_location_clean(
       data.frame(
         `Location Name` = "TURKEY:  ANTAKYA (ANTIOCH)",
         Mo = 4, Dy = 9,
@@ -61,7 +61,7 @@ test_that("error_when_required_column_missing", {
   )
 
   expect_error(
-    eq_clean_data(
+    eq_location_clean(
       data.frame(
         `Location Name` = "TURKEY:  ANTAKYA (ANTIOCH)",
         Year = 37, Dy = 9,
@@ -71,7 +71,7 @@ test_that("error_when_required_column_missing", {
   )
 
   expect_error(
-    eq_clean_data(
+    eq_location_clean(
       data.frame(
         `Location Name` = "TURKEY:  ANTAKYA (ANTIOCH)",
         Year = 37, Mo = 4,
@@ -81,7 +81,7 @@ test_that("error_when_required_column_missing", {
   )
 
   expect_error(
-    eq_clean_data(
+    eq_location_clean(
       data.frame(
         `Location Name` = "TURKEY:  ANTAKYA (ANTIOCH)",
         Year = 37, Mo = 4, Dy = 9,
@@ -91,7 +91,7 @@ test_that("error_when_required_column_missing", {
   )
 
   expect_error(
-    eq_clean_data(
+    eq_location_clean(
       data.frame(
         `Location Name` = "TURKEY:  ANTAKYA (ANTIOCH)",
         Year = 37, Mo = 4, Dy = 9,

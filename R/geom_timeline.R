@@ -22,20 +22,19 @@
 #' @importFrom ggplot2 layer
 #'
 #' @examples
-#' \dontrun{
+#' library(ggplot2)
+#'
 #' # Example 1
 #' lcd = eq_location_clean(earthquakes, countries = "ALASKA")
 #' ggplot2::ggplot(lcd, ggplot2::aes(x = DATE)) +
 #' geom_timeline()
 #'
 #' # Example 2
-#' lcd = eq_location_clean(earthquakes, 2000, 2020,
-#' c("CHINA","TURKEY"))
+#' lcd = eq_location_clean(earthquakes, 2000, 2020, c("CHINA","TURKEY"))
 #' ggplot2::ggplot(
-#'  lcd,
-#'  ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths,
-#'               size = Mag, group = 1:nrow(lcd))) +
-#'  geom_timeline() + theme_timeline()
+#'   lcd,
+#'   ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths, size = Mag)) +
+#'   geom_timeline()
 #'
 #' # Example 3
 #' df = data.frame(
@@ -44,23 +43,30 @@
 #' )
 #'
 #' ggplot2::ggplot(df, ggplot2::aes(x = DATE, y = COUNTRY)) +
-#'  geom_timeline(xMin=1,xMax=3)
+#'  geom_timeline(xMin = 2,xMax = 5)
 #'
 #' # Example 4
-#' dat = data.frame(
-#' DATE = as.Date(c("2010-10-23", "2010-12-24", "2010-5-13",
-#'                 "2010-5-27","2010-01-13","2010-7-18",
-#'                 "2010-03-16","2010-01-13","2010-7-18",
-#                 "2010-03-16","2010-10-23", "2010-12-24")),
-#' age = c(1,2,2,1,3,3,2,3,1,4,4,3),
-#' height = c(1,2,3,1,3,3,4,3,4,5,7,5),
-#' weight = c(2,1,3,2,2,3,4,2,3,6,6,5)
-#' )
+#' data = babygrowth
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = 1, colour = height,
+#'                                   size = weight)) +
+#'  geom_timeline(alpha = .5)
 #'
-#' ggplot2::ggplot(dat, ggplot2::aes(x = DATE, y = 1, colour = height,
-#'                                  size = weight, group = 1:nrow(dat))) +
-#'  geom_timeline(alpha = .5) + theme_timeline()
-#' }
+#' # Example 5
+#' data = babygrowth
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+#'                                   size = weight)) +
+#'  geom_timeline()
+#'
+#' # Example 6
+#' data = my_EQ_clean
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths,
+#'                                    size = Mag)) +
+#'  geom_timeline()
+#'
+#' # Example 7
+#' data = my_EQ_clean
+#' ggplot2::ggplot(data, ggplot2::aes(x = DATE, colour = Deaths, size = Mag)) +
+#'   geom_timeline()
 #'
 #' @export
 geom_timeline <- function(data = NULL,
@@ -93,53 +99,85 @@ geom_timeline <- function(data = NULL,
 #' @export
 #' @param x required aesthetic to map dates of occurrence of earthquakes
 #' @param y string, required aesthetic to map countries of occurrence of earthquakes
-#' @param color, default aesthetic to map number of deaths caused by earthquakes
+#' @param colour, default aesthetic to map number of deaths caused by earthquakes
 #' @param alpha, default aesthetic for transparency
 #' @param size default aesthetic to define size of points
 #' @param shape default aesthetic for shape of points used.
-#' @param linewidth, default aesthetic for horizontal lines
-#' @param line_col, default aesthetic for color of horizontal lines
+#' @param linetype default aesthetic for type of line
+#' @param linewidth, default aesthetic for line with
+#' @param line_col, default aesthetic for line colour
+#' @param linealpha default aesthetic for line alpha channel
 GeomTimeline <- ggplot2::ggproto(
   "GeomTimeline", ggplot2::Geom,
-  required_aes = c("x", "y", "xMin", "xMax"),
-  default_aes = ggplot2::aes(
-    shape = 19,
-    colour = "black",
-    size = 2,
-    fill = NA,
-    alpha = .3,
-    stroke = NA,
-    line_col = "grey",
-    line_alpha = .7,
-    linetype = 1,
-    linewidth = 1
-  ),
+
+  # Required aesthetics
+  required_aes = c("x"),
+
+  # Default aesthetics
+  default_aes = ggplot2::aes(y = .1,
+                             shape = 19,
+                             size = 1.5,
+                             colour = "black",
+                             alpha = 0.3,
+                             stroke = .5,
+                             fill = NA,
+                             linetype = 1,
+                             linewidth = 3,
+                             linecolour = "grey",
+                             linealpha =.8),
+
+  # Legend key
   draw_key = ggplot2::draw_key_point,
+
+  # Draw panel function
   draw_panel = function(data, panel_params, coord, ...) {
 
-    # Transform the data
-    coords <- coord$transform(data, panel_params)
-    EQ <- grid::pointsGrob(
+    # Define constants point and stroke sizes
+    ptsz = 2.845276; strksz = 1.889764
+
+    # Transform data
+    coords <- coord$transform(data, panel_params, ...)
+
+    # Compute stroke_size
+    stroke_size = ifelse(
+      !is.na(coords$stroke), coords$stroke, 0
+    )
+    # Compute alpha for lines
+    line_alpha = ifelse(
+      !is.na(coords$linealpha) &
+        coords$linealpha >= 0 & coords$linealpha <= 1,
+      coords$linealpha,
+      1
+    )
+
+    # Create all grobs
+    DateLines <- grid::polylineGrob(
+      x = grid::unit(
+        rep(c(0, 1), length(coords$y)), "npc"
+      ),
+      y = rep(coords$y, each = 2),
+      id.length = rep(2,length(coords$y)),
+      gp = grid::gpar(col = coords$linecolour,
+                      lwd = coords$linewidth,
+                      lty = coords$linetype,
+                      alpha = coords$linealpha)
+    )
+
+    EQs <- grid::pointsGrob(
       x = coords$x,
       y = coords$y,
       pch = coords$shape,
-      gp = grid::gpar(col = coords$colour,
-                      cex = .25 * coords$size,
-                      fill = coords$fill,
-                      alpha = coords$alpha,
-                      stroke = coords$stroke))
-
-    DateLine <- grid::segmentsGrob(
-      x0 = coords$xMin - coords$xMax,
-      y0 = coords$y,
-      x1 = coords$xMax - coords$xMin,
-      y1 = coords$y,
-      gp = grid::gpar(col = coords$line_col,
-                      lwd = coords$linewidth,
-                      lty = coords$linetype,
-                      alpha = coords$line_alpha))
+      gp = grid::gpar(
+        col = ggplot2::alpha(coords$colour, coords$alpha),
+        fill = ggplot2::alpha(coords$fill, coords$alpha),
+        lwd = coords$stroke * strksz,
+        fontsize = coords$size * ptsz + coords$stroke * strksz
+      )
+    )
 
     # Return all grobs
-    grid::gList(DateLine, EQ)
+    grid::gTree(children = grid::gList(
+      DateLines, EQs
+    ))
   }
 )

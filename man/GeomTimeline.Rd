@@ -11,7 +11,7 @@ geom_timeline()}
 
 \item{y}{string, required aesthetic to map countries of occurrence of earthquakes}
 
-\item{color, }{default aesthetic to map number of deaths caused by earthquakes}
+\item{colour, }{default aesthetic to map number of deaths caused by earthquakes}
 
 \item{alpha, }{default aesthetic for transparency}
 
@@ -19,9 +19,13 @@ geom_timeline()}
 
 \item{shape}{default aesthetic for shape of points used.}
 
-\item{linewidth, }{default aesthetic for horizontal lines}
+\item{linetype}{default aesthetic for type of line}
 
-\item{line_col, }{default aesthetic for color of horizontal lines}
+\item{linewidth, }{default aesthetic for line with}
+
+\item{line_col, }{default aesthetic for line colour}
+
+\item{linealpha}{default aesthetic for line alpha channel}
 }
 \description{
 GeomTimeline

@@ -27,11 +27,9 @@ earthquakes
 Earthquakes data
 }
 \examples{
-data("earthquakes")
-
-head(earthquakes)
-
 earthquakes
+
+head(earthquakes, 10)
 
 }
 \keyword{datasets}

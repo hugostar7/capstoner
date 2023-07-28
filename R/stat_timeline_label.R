@@ -23,20 +23,19 @@
 #' @importFrom ggplot2 layer
 #'
 #' @examples
-#' \dontrun{
 #' library(ggplot2)
-#' lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
+#' library(leaflet)
+#' library(raster)
+#' library(terra)
 #'
+#' data = babygrowth
 #' ggplot2::ggplot(
-#'     lcd,
-#'     ggplot2::aes(x = DATE, y = COUNTRY)) +
-#'     geom_timeline() +
-#'     stat_timeline_label(
-#'     lcd, ggplot2::aes(x = DATE, y = COUNTRY,
-#'                  label = LOCATION_NAME, by = Mag),
-#'     colour = "black", size = 3, alpha = NA
-#' )
-#' }
+#'  data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+#'                    size = weight)
+#' ) +
+#' ggplot2::geom_point() +
+#' stat_timeline_label(
+#' ggplot2::aes(x = DATE, y = AGE, label = DATE))
 #'
 #' @export
 stat_timeline_label <- function(
@@ -44,11 +43,11 @@ stat_timeline_label <- function(
     data = NULL,
     geom = "timeline_label",
     position = "identity",
-    n_max = NA,
-    sgm_len = .25,
     show.legend = FALSE,
-    inherit.aes = TRUE,
-    na.rm = FALSE,...) {
+    inherit.aes = FALSE,
+    n_max = NA,
+    sgm_len = .1,
+    na.rm = FALSE, ...) {
   ggplot2::layer(stat = StatTimelineLabel,
                  geom = geom,
                  mapping = mapping,
@@ -87,38 +86,24 @@ stat_timeline_label <- function(
 StatTimelineLabel <- ggplot2::ggproto(
   "StatTimelineLabel", ggplot2::Stat,
   required_aes = c("x", "label"),
-  optional_aes = ggplot2::aes(y = 1, by = 1),
+  default_aes = ggplot2::aes(y = .1, orderBy = 1),
   compute_group = function(data,
                            scales,
                            params,
                            n_max = NA,
-                           sgm_len = .25) {
-    if(is.null(data$y)) {data$y <- 1}
+                           sgm_len = .1) {
 
-    if(is.na(n_max)) {
-      top = data
-    } else {
-      stopifnot(!is.null(data$by))
-      LEVELS = data$y %>% factor %>% levels
-      top = lapply(LEVELS,
-                   function(lvl) {
-                     data[data$y == lvl, ] %>%
-                       dplyr::arrange(., dplyr::desc(.$by)) %>%
-                       .[1:n_max, ]
-                   }) %>% purrr::reduce(rbind)
+    data$sgm_len <- sgm_len
+
+    if(!is.na(n_max)) {
+      data = lapply(
+        data$y %>% factor %>% levels %>% as.character,
+        function(CNTRY) {
+          data[data$y == CNTRY, ] %>%
+            dplyr::arrange(., dplyr::desc(.$orderBy)) %>%
+            .[1:n_max, ]
+        }
+      ) %>% purrr::reduce(rbind)
     }
-
-    ## Create a numeric columns to use as coordinates
-    top$y = factor(top$y)
-    levels(top$y) <- 1:length(levels(top$y))
-    top$y <- as.numeric(top$y)
-
-    x = top$x
-    y = top$y
-    xend = top$x
-    yend = top$y + sgm_len
-    label = top$label
-    by = top$by
-    data.frame(x = x, y = y, xend = xend, yend = yend,
-               label = label, by = by)
+    data
   })

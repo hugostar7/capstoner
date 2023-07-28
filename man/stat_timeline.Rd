@@ -9,11 +9,11 @@ stat_timeline(
   data = NULL,
   geom = "timeline",
   position = "identity",
-  xMin = as.Date("0001-01-01"),
-  xMax = as.Date("2050-12-31"),
   show.legend = NA,
   inherit.aes = TRUE,
   na.rm = FALSE,
+  xMin = as.Date("0001-01-01"),
+  xMax = as.Date("2050-12-31"),
   ...
 )
 }
@@ -26,10 +26,6 @@ stat_timeline(
 
 \item{position}{where to plot each group of graphical element}
 
-\item{xMin}{date parameter used to subset data}
-
-\item{xMax}{date parameter used to subset data}
-
 \item{show.legend}{logical or NA. TRUE always display legend,
 FALSE does not. NA display legend only if suuplied.}
 
@@ -37,6 +33,10 @@ FALSE does not. NA display legend only if suuplied.}
 from ggplot or other top geoms}
 
 \item{na.rm}{logical parameter to indicate how NAs data should be removed}
+
+\item{xMin}{date parameter used to subset data}
+
+\item{xMax}{date parameter used to subset data}
 
 \item{...}{other arguments to be passed}
 }
@@ -46,11 +46,48 @@ in data transformed by StatTimeline to aesthetics
 to create plots
 }
 \examples{
-library(ggplot2)
-lcd = eq_location_clean(
-earthquakes, countries = c("PERU", "CHILE")
-)
-ggplot2::ggplot(lcd, ggplot2::aes(x = DATE, y = COUNTRY)) +
+# Example 1
+lcd = eq_location_clean(earthquakes, countries = "ALASKA")
+ggplot2::ggplot(lcd, ggplot2::aes(x = DATE)) +
 stat_timeline()
+
+# Example 2
+lcd = eq_location_clean(earthquakes, 2000, 2020, c("CHINA","TURKEY"))
+ggplot2::ggplot(
+  lcd,
+  ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths, size = Mag)) +
+  stat_timeline()
+
+# Example 3
+df = data.frame(
+DATE = c(1,2,3,1,2),
+COUNTRY = c("C","A","C","B","B")
+)
+
+ggplot2::ggplot(df, ggplot2::aes(x = DATE, y = COUNTRY)) +
+ stat_timeline(xMin = 2,xMax = 5)
+
+# Example 4
+data = babygrowth
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = 1, colour = height,
+                                  size = weight)) +
+ stat_timeline(alpha = .5)
+
+# Example 5
+data = babygrowth
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+                                  size = weight)) +
+ stat_timeline()
+
+# Example 6
+data = my_EQ_clean
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths,
+                                   size = Mag)) +
+ stat_timeline()
+
+# Example 7
+data = my_EQ_clean
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, colour = Deaths, size = Mag)) +
+  stat_timeline()
 
 }

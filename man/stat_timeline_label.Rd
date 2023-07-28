@@ -9,10 +9,10 @@ stat_timeline_label(
   data = NULL,
   geom = "timeline_label",
   position = "identity",
-  n_max = NA,
-  sgm_len = 0.25,
   show.legend = FALSE,
-  inherit.aes = TRUE,
+  inherit.aes = FALSE,
+  n_max = NA,
+  sgm_len = 0.1,
   na.rm = FALSE,
   ...
 )
@@ -26,10 +26,6 @@ stat_timeline_label(
 
 \item{position}{position function}
 
-\item{n_max}{numeric to set how many points to annotate}
-
-\item{sgm_len}{numeric to set length of segment}
-
 \item{show.legend}{logical or NA. TRUE will always display
 a legend. FALSE will not. NA will display
 legend only when it is supplied.}
@@ -37,6 +33,10 @@ legend only when it is supplied.}
 \item{inherit.aes}{Logical to indicate if this geom should
 inherit aesthetics from the call to
 ggplot or any other top geom}
+
+\item{n_max}{numeric to set how many points to annotate}
+
+\item{sgm_len}{numeric to set length of segment}
 
 \item{na.rm}{Logical to indicate how NAs should be removed.
 with warning or not.}
@@ -49,19 +49,18 @@ It constructs a segment line and add text annotation
 from specified  column in the data
 }
 \examples{
-\dontrun{
 library(ggplot2)
-lcd = eq_location_clean(earthquakes, 2000, 2020, "ALASKA")
+library(leaflet)
+library(raster)
+library(terra)
 
+data = babygrowth
 ggplot2::ggplot(
-    lcd,
-    ggplot2::aes(x = DATE, y = COUNTRY)) +
-    geom_timeline() +
-    stat_timeline_label(
-    lcd, ggplot2::aes(x = DATE, y = COUNTRY,
-                 label = LOCATION_NAME, by = Mag),
-    colour = "black", size = 3, alpha = NA
-)
-}
+ data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+                   size = weight)
+) +
+ggplot2::geom_point() +
+stat_timeline_label(
+ggplot2::aes(x = DATE, y = AGE, label = DATE))
 
 }

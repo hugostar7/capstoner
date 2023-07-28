@@ -45,20 +45,19 @@ a point on horizontal line for each row in the plot
 data supplied.
 }
 \examples{
-\dontrun{
+library(ggplot2)
+
 # Example 1
 lcd = eq_location_clean(earthquakes, countries = "ALASKA")
 ggplot2::ggplot(lcd, ggplot2::aes(x = DATE)) +
 geom_timeline()
 
 # Example 2
-lcd = eq_location_clean(earthquakes, 2000, 2020,
-c("CHINA","TURKEY"))
+lcd = eq_location_clean(earthquakes, 2000, 2020, c("CHINA","TURKEY"))
 ggplot2::ggplot(
- lcd,
- ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths,
-              size = Mag, group = 1:nrow(lcd))) +
- geom_timeline() + theme_timeline()
+  lcd,
+  ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths, size = Mag)) +
+  geom_timeline()
 
 # Example 3
 df = data.frame(
@@ -67,21 +66,29 @@ COUNTRY = c("C","A","C","B","B")
 )
 
 ggplot2::ggplot(df, ggplot2::aes(x = DATE, y = COUNTRY)) +
- geom_timeline(xMin=1,xMax=3)
+ geom_timeline(xMin = 2,xMax = 5)
 
 # Example 4
-dat = data.frame(
-DATE = as.Date(c("2010-10-23", "2010-12-24", "2010-5-13",
-                "2010-5-27","2010-01-13","2010-7-18",
-                "2010-03-16","2010-01-13","2010-7-18",
-age = c(1,2,2,1,3,3,2,3,1,4,4,3),
-height = c(1,2,3,1,3,3,4,3,4,5,7,5),
-weight = c(2,1,3,2,2,3,4,2,3,6,6,5)
-)
+data = babygrowth
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = 1, colour = height,
+                                  size = weight)) +
+ geom_timeline(alpha = .5)
 
-ggplot2::ggplot(dat, ggplot2::aes(x = DATE, y = 1, colour = height,
-                                 size = weight, group = 1:nrow(dat))) +
- geom_timeline(alpha = .5) + theme_timeline()
-}
+# Example 5
+data = babygrowth
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = AGE, colour = height,
+                                  size = weight)) +
+ geom_timeline()
+
+# Example 6
+data = my_EQ_clean
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, y = COUNTRY, colour = Deaths,
+                                   size = Mag)) +
+ geom_timeline()
+
+# Example 7
+data = my_EQ_clean
+ggplot2::ggplot(data, ggplot2::aes(x = DATE, colour = Deaths, size = Mag)) +
+  geom_timeline()
 
 }

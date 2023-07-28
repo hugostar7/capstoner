@@ -19,9 +19,6 @@ map dates of occurrence of earthquakes}
 \item{colour}{default aesthetic for color points}
 
 \item{size}{default aesthetic  for size of points}
-
-\item{grp_aes}{default aesthetic to define grouping
-structure in a data frame.}
 }
 \description{
 ggproto object of Stat class to define aesthetics
