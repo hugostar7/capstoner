@@ -1,0 +1,169 @@
+---
+title: "capstoner"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{capstoner}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(capstoner)
+```
+
+# Create Maps and Time Series Plots Using capstoner
+
+The goal of `capstoner` is to provide means to visualize earthquakes data. Functions in this package can be used to create data visualization tools such as time series plots and interactive maps of earthquakes data with specific columns. In order to ensure a stable performance of all the functions in this package, it is important that your raw data contains the following columns:
+ . `Year`, `Mo`, `Dy`, `Longitude`, `Latitude`, `Location Name`,
+ . `Mag`, `Deaths`, `Total Deaths`
+
+An example of data `earthquakes`, downloaded from NOAA's website, is included to demonstrate how functions exported by `capstoner` can be used. Run : `earthquakes` from `R` or `RStudio` to use `earthquakes` or download your own updated data at:
+\url{https://www.ngdc.noaa.gov/hazel/view/hazards/earthquake}.
+
+The functions `eq_clean_data()` and `eq_location_clean()` can be used to clean  the data and create the columns: `DATE`, `COUNTRY`, `LOCATION_NAME`,
+`LONGITUDE`, `LATITUDE`for our data analysis. You can start cleaning yor data with `eq_clean_data()`. It combines `Year`, `Mo` and `Dy` into a date class column `DATE`. `Longitude` and `Latitude` are coerced into numeric columns `LONGITUDE` and `LATITUDE`. Finish data preparation by splitting `Location Name` column into `COUNTRY`, `LOCATION_NAME` using `eq_location_clean()`. It can take optional arguments `year_min`, `year_max`, `countries` to filter the data for a range of years and countries that you specified. It returns the data in the format used in all other functions in the package. 
+
+The function `geom_timeline()` creates time series plots which can be  annotated with `geom_timeline_label()`. The function `eq_create_label()` helps create customized popups on interactive maps  created using `eq_maps()`.
+
+## Installation
+
+You can install the development version of `capstoner` from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("hugostar7/capstoner")
+```
+
+# The sample data: earthquakes
+
+```{r earthquakes}
+data("earthquakes")
+head(earthquakes)
+tail(earthquakes)
+```
+
+# Clean Earthquakes Data Using `eq_clean_data()` Function
+cd : clean data
+
+```{r cleaning_data.eq_clean_data}
+cd = eq_clean_data(earthquakes)
+cd
+cd[, 32:36]
+```
+
+# Cleaning Earthquakes Data With `eq_location_clean()` Function
+lcd : location cleaned data
+
+```{r cleaning_data.eq_location_clean}
+lcd = eq_location_clean(earthquakes)
+lcd
+lcd[, 33:37]
+```
+
+Let's use the optinal arguments to filter the data
+year_min = 2000, year_max = 2020
+countries = c("ALASKA", "PERU", "GREECE")
+
+```{r optional_arguments}
+lcd = eq_location_clean(earthquakes, 
+                        2000,
+                        2020,
+                        c("ALASKA", "PERU", "GREECE"))
+lcd
+lcd[, 33:37]
+```
+
+# Create Time Serie Plots of Earthquakes Data Using `geom_timeline()`  
+ 
+The following code can be used to create the time serie plot of earthquakes in Alaska, Greece, Peru from 2000 to 2020.
+ 
+```{r time_serie_1}
+lcd = eq_location_clean(earthquakes, 2000, 2020, 
+                        c("ALASKA", "GREECE"))
+plot_1 <- 
+  ggplot2::ggplot(
+    lcd, 
+    ggplot2::aes(x = DATE, size = Mag, colour = Deaths)) +
+  geom_timeline() + theme_timeline() +
+  ggplot2::scale_size_continuous(name = "Richter scale value",
+                                 breaks = c(2, 4, 6, 8, 10)) +
+  ggplot2::scale_color_continuous(name = "# Deaths")
+
+plot_1
+```
+
+Let's use the `y` aesthetic to plot multiple time series
+
+```{r time_serie_multi}
+plot_MULTI <- 
+  ggplot2::ggplot(
+    lcd, 
+    ggplot2::aes(x = DATE, y = COUNTRY, size = Mag, colour = Deaths)) +
+  geom_timeline() + theme_timeline() +
+  ggplot2::scale_size_continuous(name = "Richter scale value",
+                                 breaks = c(2, 4, 6, 8, 10)) +
+  ggplot2::scale_color_continuous(name = "# Deaths")
+
+plot_MULTI
+```
+
+
+# Annotate Time Serie Plots With `geom_timeline_label()`
+
+Let's annotate the 5 highest earthquakes by magnitude on plot_MULTI to show `LOCATION_NAME`. Here we must specify n_max = 5. If not all the earthquakes on the plot will be annotated.
+
+```{r annotation}
+plot_MULTI + 
+  geom_timeline_label(
+    lcd, ggplot2::aes(x = DATE, y = COUNTRY,
+                      label = LOCATION_NAME, by = Mag),
+    colour = "black", size = 3, alpha = NA, n_max = 5
+  )
+```
+
+# Create Maps of Earthquakes Data : `eq_map()`
+
+You can also create an interactive map for the earthquakes data, supplying the "DATE" column as annotation column to `annot_col`
+argument of the function `eq_map`.
+
+```{r interactiveMap}
+library(magrittr)
+#earthquakes %>% 
+  #eq_location_clean() %>% 
+  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  #eq_map(annot_col = "DATE")
+```
+
+You can get the same result, letting `eq_location_clean` filter the data
+
+```{r map}
+lcd = eq_location_clean(earthquakes, 2000, 2024, "JAPAN")
+#eq_map(lcd, "LOCATION_NAME")
+```
+
+# Create Custom Popup Using `eq_create_label()` 
+Let's customize the popups on the previous map to show the location, the total number of deaths and the magnitude of each earthquake
+
+```{r custom_popup}
+library(magrittr)
+#lcd %>%
+  #dplyr::mutate(popup_text = eq_create_label(.)) %>%
+  #eq_map(annot_col = "popup_text")
+```
+
+Let's add custom popups to MEXICO's map as well
+
+```{r cust_popup}
+#earthquakes %>% 
+  #eq_location_clean() %>% 
+  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  #dplyr::mutate(popup_text = eq_create_label(.)) %>% 
+  #eq_map(annot_col = "popup_text")
+```
