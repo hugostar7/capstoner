@@ -113,7 +113,7 @@ GeomTimeline <- ggplot2::ggproto(
   required_aes = c("x"),
 
   # Default aesthetics
-  default_aes = ggplot2::aes(y = .1,
+  default_aes = ggplot2::aes(y = .25,
                              shape = 19,
                              size = 1.5,
                              colour = "black",

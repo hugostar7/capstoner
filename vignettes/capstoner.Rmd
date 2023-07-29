@@ -44,7 +44,7 @@ devtools::install_github("hugostar7/capstoner")
 # The sample data: earthquakes
 
 ```{r earthquakes}
-data("earthquakes")
+earthquakes
 head(earthquakes)
 tail(earthquakes)
 ```
