@@ -90,7 +90,7 @@ GeomTimelineLabel <- ggplot2::ggproto(
     y = .1, orderBy = 1,
     colour = "black", alpha = NA,
     linewidth = 1, linetype = 1,
-    angle = 45, fontsize = 7,
+    angle = 45, fontsize = 8,
     hjust = 0, vjust = 0, just = 0
   ),
 

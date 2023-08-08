@@ -33,6 +33,7 @@ Imports:
     ggplot2,
     grid,
     htmltools,
+    leaflet,
     lubridate,
     magrittr,
     purrr,

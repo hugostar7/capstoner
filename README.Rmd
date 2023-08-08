@@ -61,27 +61,78 @@ lcd = eq_location_clean(earthquakes)
 head(lcd)[ , 33:37]
 ```
 
+This is a basic example which shows you how to create  a 
+time serie plot of earthquakes data
+
+```{r timeSeriePlot}
+library(capstoner)
+lcd = eq_location_clean(earthquakes, 2000, 2020, "CHINA")
+p_china <- 
+  ggplot2::ggplot(
+    lcd, 
+    ggplot2::aes(x = DATE, y = COUNTRY, size = Mag, colour = Deaths)) +
+  geom_timeline() + theme_timeline() +
+  ggplot2::scale_size_continuous(name = "Richter scale value",
+                                 breaks = c(2, 4, 6, 8, 10)) +
+  ggplot2::scale_color_continuous(name = "# Deaths")
+
+p_china
+```
+
+Let's annotate the previous plot using `geom_timeline_label`
+```{r annotation}
+p_china + 
+  geom_timeline_label(
+    lcd, ggplot2::aes(x = DATE, y = COUNTRY, label = LOCATION_NAME, orderBy = Mag), n_max = 5
+  )
+```
+
+We can use the y aesthetic to create  multiples time series plots of earthquakes data
+
+```{r multiTimeSeriePlot}
+lcd = eq_location_clean(earthquakes, 2000, 2020, c("TURKEY", "CHINA"))
+p_multi <- 
+  ggplot2::ggplot(
+    lcd, 
+    ggplot2::aes(x = DATE, y = COUNTRY, size = Mag,
+                 colour = Deaths)) +
+  geom_timeline() + theme_timeline() +
+  ggplot2::scale_size_continuous(name = "Richter scale value",
+                                 breaks = c(2, 4, 6, 8, 10)) +
+  ggplot2::scale_color_continuous(name = "# Deaths")
+
+p_multi
+```
+
+We can also annotate multiples time series plots using `geom_timeline_label`
+```{r multi_annotation}
+p_multi + 
+  geom_timeline_label(
+    lcd, ggplot2::aes(x = DATE, y = COUNTRY,
+                      label = LOCATION_NAME, orderBy = Mag), n_max = 5
+  )
+```
+
 You can also create an interactive map for the earthquakes data:
 
 ```{r interactiveMap}
-#earthquakes %>%
-  #eq_location_clean() %>% 
-  #dplyr::filter(COUNTRY == "MEXICO" &       #lubridate::year(DATE) >= #2000) %>% 
-  #eq_map(annot_col = "DATE")
+earthquakes %>%
+  eq_location_clean() %>% 
+  dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  eq_map(annot_col = "DATE")
 
 # You can also use eq_location_clean to filter the data
-#eq_location_clean(earthquakes, year_min = 2000, countries #= MEXICO") %>%
-  #eq_map(annot_col = "DATE")
+eq_location_clean(earthquakes, year_min = 2000, countries = "MEXICO") %>%
+  eq_map(annot_col = "DATE")
 ```
 
 Let's  customize the popups on the previous map using
 `eq_create_label`
 
 ```{r custm_popup}
-#earthquakes %>%
-  #eq_location_clean() %>% 
-  #dplyr::filter(COUNTRY == "MEXICO" & #lubridate::year(DATE) >= 2000) %>% 
-  #dplyr::mutate(popup_text = eq_create_label(.)) %>% 
-  #eq_map(annot_col = "popup_text")
+earthquakes %>%
+  eq_location_clean() %>% 
+  dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  dplyr::mutate(popup_text = eq_create_label(.)) %>% 
+  eq_map(annot_col = "popup_text")
 ```
-

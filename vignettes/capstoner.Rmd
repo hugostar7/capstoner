@@ -87,7 +87,7 @@ The following code can be used to create the time serie plot of earthquakes in A
 ```{r time_serie_1}
 lcd = eq_location_clean(earthquakes, 2000, 2020, 
                         c("ALASKA", "GREECE"))
-plot_1 <- 
+p_1 <- 
   ggplot2::ggplot(
     lcd, 
     ggplot2::aes(x = DATE, size = Mag, colour = Deaths)) +
@@ -96,13 +96,13 @@ plot_1 <-
                                  breaks = c(2, 4, 6, 8, 10)) +
   ggplot2::scale_color_continuous(name = "# Deaths")
 
-plot_1
+p_1
 ```
 
 Let's use the `y` aesthetic to plot multiple time series
 
 ```{r time_serie_multi}
-plot_MULTI <- 
+p_multi <- 
   ggplot2::ggplot(
     lcd, 
     ggplot2::aes(x = DATE, y = COUNTRY, size = Mag, colour = Deaths)) +
@@ -111,7 +111,7 @@ plot_MULTI <-
                                  breaks = c(2, 4, 6, 8, 10)) +
   ggplot2::scale_color_continuous(name = "# Deaths")
 
-plot_MULTI
+p_multi
 ```
 
 
@@ -120,11 +120,10 @@ plot_MULTI
 Let's annotate the 5 highest earthquakes by magnitude on plot_MULTI to show `LOCATION_NAME`. Here we must specify n_max = 5. If not all the earthquakes on the plot will be annotated.
 
 ```{r annotation}
-plot_MULTI + 
+p_multi + 
   geom_timeline_label(
-    lcd, ggplot2::aes(x = DATE, y = COUNTRY,
-                      label = LOCATION_NAME, by = Mag),
-    colour = "black", size = 3, alpha = NA, n_max = 5
+    lcd, ggplot2::aes(x = DATE, y = COUNTRY, orderBy = Mag,
+                      label = LOCATION_NAME), n_max = 5
   )
 ```
 
@@ -135,17 +134,17 @@ argument of the function `eq_map`.
 
 ```{r interactiveMap}
 library(magrittr)
-#earthquakes %>% 
-  #eq_location_clean() %>% 
-  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
-  #eq_map(annot_col = "DATE")
+earthquakes %>% 
+  eq_location_clean() %>% 
+  dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  eq_map(annot_col = "DATE")
 ```
 
 You can get the same result, letting `eq_location_clean` filter the data
 
 ```{r map}
 lcd = eq_location_clean(earthquakes, 2000, 2024, "JAPAN")
-#eq_map(lcd, "LOCATION_NAME")
+eq_map(lcd, "LOCATION_NAME")
 ```
 
 # Create Custom Popup Using `eq_create_label()` 
@@ -153,17 +152,17 @@ Let's customize the popups on the previous map to show the location, the total n
 
 ```{r custom_popup}
 library(magrittr)
-#lcd %>%
-  #dplyr::mutate(popup_text = eq_create_label(.)) %>%
-  #eq_map(annot_col = "popup_text")
+lcd %>%
+  dplyr::mutate(popup_text = eq_create_label(.)) %>%
+  eq_map(annot_col = "popup_text")
 ```
 
 Let's add custom popups to MEXICO's map as well
 
 ```{r cust_popup}
-#earthquakes %>% 
-  #eq_location_clean() %>% 
-  #dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
-  #dplyr::mutate(popup_text = eq_create_label(.)) %>% 
-  #eq_map(annot_col = "popup_text")
+earthquakes %>% 
+  eq_location_clean() %>% 
+  dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>% 
+  dplyr::mutate(popup_text = eq_create_label(.)) %>% 
+  eq_map(annot_col = "popup_text")
 ```
